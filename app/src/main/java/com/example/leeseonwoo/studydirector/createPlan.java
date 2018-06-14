@@ -2,6 +2,7 @@ package com.example.leeseonwoo.studydirector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,8 @@ public class createPlan extends AppCompatActivity {
     Intent intent = new Intent();
     int imgID;
     String str;
+    DatabaseOpenHelper DBHelper;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,9 @@ public class createPlan extends AppCompatActivity {
                     case "JAVA": imgID = R.drawable.javaimg;
                         break;
                     case "C#" : imgID = R.drawable.csh;
+                        break;
+                    case "기타 도서" : imgID = R.drawable.book;
+                        break;
                 }
                 intent.putExtra("subject",str);
                 intent.putExtra("imgID", String.valueOf(imgID));

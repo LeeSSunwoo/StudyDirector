@@ -1,6 +1,7 @@
 package com.example.leeseonwoo.studydirector;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    DatabaseOpenHelper DBHelper;
+    SQLiteDatabase db;
 
     CustomAdapter customAdapter = new CustomAdapter();
     @Override
