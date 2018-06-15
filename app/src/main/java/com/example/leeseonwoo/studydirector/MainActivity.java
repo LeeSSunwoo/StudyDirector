@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent1 = new Intent(this, SplashActivity.class);
+        startActivity(intent1);
 
         ImageButton CreateBtn = (ImageButton)findViewById(R.id.imageButton);
         Button recordBtn = (Button)findViewById(R.id.button2);
@@ -30,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         CreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), createPlan.class);
-                startActivityForResult(intent, 111);
+                Intent intent2 = new Intent(getApplicationContext(), createPlan.class);
+                startActivityForResult(intent2, 111);
             }
         });
 
         recordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
-                startActivity(intent);
+                Intent intent3 = new Intent(getApplicationContext(),Main2Activity.class);
+                startActivity(intent3);
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
