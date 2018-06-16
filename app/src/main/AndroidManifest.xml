@@ -21,10 +21,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".SelectActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".createPlan" />
         <activity android:name=".Main2Activity" />
-        <activity android:name=".Main3Activity"></activity>
+        <activity android:name=".Main3Activity" />
+        <activity android:name=".createPlan2"></activity>
     </application>
 
 </manifest>
