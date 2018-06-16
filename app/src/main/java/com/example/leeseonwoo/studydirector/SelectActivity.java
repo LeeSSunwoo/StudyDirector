@@ -25,5 +25,13 @@ public class SelectActivity extends Activity {
             }
         });
 
+        pimgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent3 = new Intent(getApplicationContext(), Main3Activity.class);
+                startActivity(intent3);
+            }
+        });
+
     }
 }
