@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
+    int imgID;
 
     CustomAdapter customAdapter = new CustomAdapter();
     @Override
@@ -55,14 +56,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 111) {
-            int imgID = Integer.parseInt(data.getStringExtra("imgID"));
-            String subject = data.getStringExtra("Bname");
-            String date = data.getStringExtra("date");
-            String page = data.getStringExtra("page");
-            String Dpage = data.getStringExtra("Dpage");
-            customAdapter.addItem(imgID, subject, date, page, Dpage);
-            customAdapter.notifyDataSetChanged();
+        if (resultCode != RESULT_CANCELED) {
+            if(requestCode == 111) {
+                imgID = Integer.parseInt(data.getStringExtra("imgID"));
+                String subject = data.getStringExtra("Bname");
+                String date = data.getStringExtra("date");
+                String page = data.getStringExtra("page");
+                String Dpage = data.getStringExtra("Dpage");
+                customAdapter.addItem(imgID, subject, date, page, Dpage);
+                customAdapter.notifyDataSetChanged();
+            }
         }
     }
     @Override

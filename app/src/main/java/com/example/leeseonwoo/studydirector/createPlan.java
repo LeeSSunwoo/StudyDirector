@@ -16,6 +16,7 @@ import android.widget.Spinner;
 public class createPlan extends AppCompatActivity {
     Intent intent = new Intent();
     int imgID;
+    int dPage;
     String str;
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
@@ -24,7 +25,8 @@ public class createPlan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
 
-        Button btn = (Button)findViewById(R.id.button3);
+        Button createbtn = (Button)findViewById(R.id.createBtn);
+        Button cancleBtn = (Button)findViewById(R.id.cancleBtn);
         final EditText titleText = (EditText)findViewById(R.id.editText);
         final EditText pageText = (EditText)findViewById(R.id.editText2);
         Spinner subject = (Spinner)findViewById(R.id.spinner);
@@ -46,12 +48,21 @@ public class createPlan extends AppCompatActivity {
 
             }
         });
-        btn.setOnClickListener(new View.OnClickListener() {
+        createbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String page = pageText.getText().toString();
                 String date = dateText.getText().toString();
                 String Bname = titleText.getText().toString();
+                int iPage = 0;
+                int iDate = 0;
+                try {
+                    iPage = Integer.parseInt(page);
+                    iDate = Integer.parseInt(date);
+                    dPage = iPage/iDate;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
                 switch (str)
                 {
                     case "Node.js": imgID = R.drawable.nodejsimg;
@@ -70,9 +81,14 @@ public class createPlan extends AppCompatActivity {
                 intent.putExtra("Bname",Bname);
                 intent.putExtra("page",page);
                 intent.putExtra("date",date);
-                int Dpage = Integer.parseInt(page)/Integer.parseInt(date);
-                intent.putExtra("Dpage", String.valueOf(Dpage));
-                setResult(Activity.RESULT_OK, intent);
+                intent.putExtra("Dpage", String.valueOf(dPage));
+                setResult(111, intent);
+                finish();
+            }
+        });
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
                 finish();
             }
         });

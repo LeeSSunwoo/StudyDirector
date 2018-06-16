@@ -141,9 +141,24 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button3"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CREATE" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CREATE" />
+
+        <Button
+            android:id="@+id/cancleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancle" />
+
+    </LinearLayout>
 </LinearLayout>
