@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/simgBtn"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -39,7 +39,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/pimgBtn"
             android:layout_width="match_parent"
             android:layout_height="0dp"

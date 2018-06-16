@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 public class SplashActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +19,7 @@ public class SplashActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 Intent intent1 = new Intent(getApplicationContext(), SelectActivity.class);
                 startActivity(intent1);
                 finish();

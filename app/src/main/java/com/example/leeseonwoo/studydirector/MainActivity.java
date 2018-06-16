@@ -1,6 +1,7 @@
 package com.example.leeseonwoo.studydirector;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,12 +10,18 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
     int imgID;
+    long now;
+    TextView tv;
 
     CustomAdapter customAdapter = new CustomAdapter();
     @Override
@@ -22,6 +29,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+         tv = (TextView)findViewById(R.id.tv);
+
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateYOURthing();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        t.start();
 
         ImageButton CreateBtn = (ImageButton)findViewById(R.id.imageButton);
         Button recordBtn = (Button)findViewById(R.id.button2);
@@ -57,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode != RESULT_CANCELED) {
             if(requestCode == 111) {
+
                 imgID = Integer.parseInt(data.getStringExtra("imgID"));
                 String subject = data.getStringExtra("Bname");
                 String date = data.getStringExtra("date");
@@ -71,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+    }
+
+    private void updateYOURthing() {
+        now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdfnow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String strNow = sdfnow.format(date);
+        tv.setText(strNow);
     }
 
 }

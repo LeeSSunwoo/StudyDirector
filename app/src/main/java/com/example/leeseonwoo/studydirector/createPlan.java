@@ -33,10 +33,12 @@ public class createPlan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
 
+        DBHelper = new DatabaseOpenHelper(getApplicationContext());
+        db = DBHelper.getWritableDatabase();
 
-
-
-
+        Date date = new Date(now);
+        SimpleDateFormat D = new SimpleDateFormat("MM-dd");
+        final String curDay = D.format(date);
 
         Button btn = (Button)findViewById(R.id.createBtn);
         final EditText titleText = (EditText)findViewById(R.id.editText);
@@ -55,12 +57,6 @@ public class createPlan extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 str = adapterView.getItemAtPosition(i).toString();
-                Date date = new Date(now);
-                SimpleDateFormat mon = new SimpleDateFormat("MM");
-                SimpleDateFormat day = new SimpleDateFormat("dd");
-                String curMon = mon.format(date);
-                String curDay = day.format(date);
-                //Toast.makeText(getApplicationContext(),curMon+":"+curDay,Toast.LENGTH_SHORT).show();
 
             }
 
@@ -96,8 +92,9 @@ public class createPlan extends AppCompatActivity {
                 intent.putExtra("date",date);
                 int Dpage = Integer.parseInt(page)/Integer.parseInt(date);
                 intent.putExtra("Dpage", String.valueOf(Dpage));
-
-
+                db = DBHelper.getWritableDatabase();
+                //String sql = "insert into (BookName, Page, ImgID, Date, RDate) VALUES("+Bname+", "+page+", "+imgID+", "+date+", "+curDay+")";
+                //db.execSQL(sql);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }

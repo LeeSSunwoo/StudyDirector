@@ -14,8 +14,8 @@ public class SelectActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
-        ImageView simgButton = (ImageView) findViewById(R.id.simgBtn);
-        ImageView pimgButton = (ImageView) findViewById(R.id.pimgBtn);
+        ImageButton simgButton = (ImageButton) findViewById(R.id.simgBtn);
+        ImageButton pimgButton = (ImageButton) findViewById(R.id.pimgBtn);
 
         simgButton.setOnClickListener(new View.OnClickListener() {
             @Override
