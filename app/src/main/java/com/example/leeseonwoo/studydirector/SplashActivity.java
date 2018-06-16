@@ -1,9 +1,10 @@
 package com.example.leeseonwoo.studydirector;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class SplashActivity extends Activity {
     @Override
@@ -17,6 +18,8 @@ public class SplashActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Intent intent1 = new Intent(getApplicationContext(), SelectActivity.class);
+                startActivity(intent1);
                 finish();
             }
         }, 2000);

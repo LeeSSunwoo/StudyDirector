@@ -21,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent1 = new Intent(this, SplashActivity.class);
-        startActivity(intent1);
+
 
         ImageButton CreateBtn = (ImageButton)findViewById(R.id.imageButton);
         Button recordBtn = (Button)findViewById(R.id.button2);
