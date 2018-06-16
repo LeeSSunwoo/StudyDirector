@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 import android.widget.AdapterView;
@@ -12,25 +14,38 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class createPlan extends AppCompatActivity {
     Intent intent = new Intent();
     int imgID;
-    int dPage;
     String str;
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
+    long now = System.currentTimeMillis();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
 
-        Button createbtn = (Button)findViewById(R.id.createBtn);
-        Button cancleBtn = (Button)findViewById(R.id.cancleBtn);
+
+
+
+
+
+        Button btn = (Button)findViewById(R.id.createBtn);
         final EditText titleText = (EditText)findViewById(R.id.editText);
         final EditText pageText = (EditText)findViewById(R.id.editText2);
         Spinner subject = (Spinner)findViewById(R.id.spinner);
         final EditText dateText = (EditText)findViewById(R.id.dateT);
+
+        pageText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dateText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         ArrayAdapter subAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.subject));
         subAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -40,6 +55,12 @@ public class createPlan extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 str = adapterView.getItemAtPosition(i).toString();
+                Date date = new Date(now);
+                SimpleDateFormat mon = new SimpleDateFormat("MM");
+                SimpleDateFormat day = new SimpleDateFormat("dd");
+                String curMon = mon.format(date);
+                String curDay = day.format(date);
+                //Toast.makeText(getApplicationContext(),curMon+":"+curDay,Toast.LENGTH_SHORT).show();
 
             }
 
@@ -48,21 +69,13 @@ public class createPlan extends AppCompatActivity {
 
             }
         });
-        createbtn.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String page = pageText.getText().toString();
                 String date = dateText.getText().toString();
                 String Bname = titleText.getText().toString();
-                int iPage = 0;
-                int iDate = 0;
-                try {
-                    iPage = Integer.parseInt(page);
-                    iDate = Integer.parseInt(date);
-                    dPage = iPage/iDate;
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
+
                 switch (str)
                 {
                     case "Node.js": imgID = R.drawable.nodejsimg;
@@ -81,14 +94,11 @@ public class createPlan extends AppCompatActivity {
                 intent.putExtra("Bname",Bname);
                 intent.putExtra("page",page);
                 intent.putExtra("date",date);
-                intent.putExtra("Dpage", String.valueOf(dPage));
-                setResult(111, intent);
-                finish();
-            }
-        });
-        cancleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
+                int Dpage = Integer.parseInt(page)/Integer.parseInt(date);
+                intent.putExtra("Dpage", String.valueOf(Dpage));
+
+
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });

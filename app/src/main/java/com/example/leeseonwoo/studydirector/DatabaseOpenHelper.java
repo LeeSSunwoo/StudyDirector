@@ -8,8 +8,8 @@ import android.util.Log;
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static final String TAG = "DatabaseOpenHelper";
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "city.db";
-    public static final String TABLE_NAME1 = "City";
+    public static final String DATABASE_NAME = "MyReadRecord.db";
+    public static final String TABLE_NAME1 = "MyReadRecord";
 
 
     public DatabaseOpenHelper(Context context) {
@@ -19,7 +19,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable1 = "create table "+TABLE_NAME1+" (_id integer PRIMARY KEY autoincrement,"+
-                " Name text not null, CountryCode text, District text, Population integer)";
+                " BookName text not null, Page text, ImgID integer, Date integer, RDate integer, Record text)";
         try{
             db.execSQL(createTable1);
             Log.d(TAG, "Create Table1 City");
