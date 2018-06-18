@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 ss = "select * from MyReadRecord where _id="+String.valueOf(i+1);
                 Cursor cursor = db.rawQuery(ss, null);
 
-                img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
+                imgid = cursor.getInt(cursor.getColumnIndex("Imgid"));
                 subject = cursor.getString(cursor.getColumnIndex("Bookname"));
                 date = cursor.getString(cursor.getColumnIndex("Date"));
                 page = cursor.getString(cursor.getColumnIndex("Page"));
