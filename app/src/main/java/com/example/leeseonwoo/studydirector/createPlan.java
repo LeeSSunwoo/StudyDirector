@@ -95,7 +95,7 @@ public class createPlan extends AppCompatActivity {
                 intent.putExtra("Dpage", String.valueOf(Dpage));
                 db = DBHelper.getWritableDatabase();
 
-                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"');";
+                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate, checked) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"', '"+false+"');";
                 db.execSQL(sql);
                 Toast.makeText(getApplicationContext(), "디비 업로드",Toast.LENGTH_SHORT).show();
                 setResult(Activity.RESULT_OK, intent);

@@ -11,6 +11,7 @@ public class ListViewItem {
     private String pageStr;
     private int checkID;
     private String checkStr;
+    private boolean checked;
 
     public int getImageID() {
         return imageID;
@@ -56,5 +57,13 @@ public class ListViewItem {
 
     public void setCheckStr(String checkStr) {
         this.checkStr = checkStr;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean getChecked() {
+        return checked;
     }
 }
