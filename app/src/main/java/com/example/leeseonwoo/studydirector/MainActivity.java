@@ -68,11 +68,10 @@ public class MainActivity extends AppCompatActivity {
         String subject, date, page, dpage, ss;
         int img_id;
         if(count()>0) {
-            for (int i = 0; i < count(); i++) {
-                ss = "select * from MyReadRecord where _id="+String.valueOf(i+1);
-                Cursor cursor = db.rawQuery(ss, null);
-
-                imgid = cursor.getInt(cursor.getColumnIndex("Imgid"));
+            ss = "select * from MyReadRecord order by _id";
+            Cursor cursor = db.rawQuery(ss, null);
+            while (cursor.moveToNext()){
+                img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
                 subject = cursor.getString(cursor.getColumnIndex("Bookname"));
                 date = cursor.getString(cursor.getColumnIndex("Date"));
                 page = cursor.getString(cursor.getColumnIndex("Page"));
