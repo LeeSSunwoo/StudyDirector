@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         tv = (TextView)findViewById(R.id.tv);
+
+
+        tv = (TextView)findViewById(R.id.tv);
 
         Thread t = new Thread() {
 
@@ -55,8 +58,39 @@ public class MainActivity extends AppCompatActivity {
         ImageButton CreateBtn = (ImageButton)findViewById(R.id.imageButton);
         Button recordBtn = (Button)findViewById(R.id.button2);
         ListView listView = (ListView)findViewById(R.id.listView);
-        listView.setAdapter(customAdapter);
+        DBHelper = new DatabaseOpenHelper(getApplicationContext());
+        db = DBHelper.getWritableDatabase();
+        /*if(Rcount()==8) {
+            db.execSQL("drop table MyReadRecord");
+            db.execSQL("create table MyReadRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, Dpage text, Imgid integer, Date text, Rdate text, Record text);");
+            db.execSQL("delete from MyReadRecord");
+        }*/
+        String subject, date, page, dpage, ss;
+        int img_id;
+        if(count()>0) {
+            for (int i = 0; i < count(); i++) {
+                ss = "select * from MyReadRecord where _id="+String.valueOf(i+1);
+                Cursor cursor = db.rawQuery(ss, null);
 
+                img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
+                subject = cursor.getString(cursor.getColumnIndex("Bookname"));
+                date = cursor.getString(cursor.getColumnIndex("Date"));
+                page = cursor.getString(cursor.getColumnIndex("Page"));
+                dpage = cursor.getString(cursor.getColumnIndex("Dpage"));
+
+
+                //Log.w("img",imgID);
+                //Log.w("sub",subject);
+                //Log.w("date",date);
+                //Log.w("page",page);
+                //Log.w("dpage",dpage);
+                customAdapter.addItem(img_id, subject, date, page, dpage);
+            }
+            customAdapter.notifyDataSetChanged();
+        }
+        //db.execSQL("delete from MyReadRecord");
+
+        listView.setAdapter(customAdapter);
 
         CreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +143,23 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdfnow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String strNow = sdfnow.format(date);
         tv.setText(strNow);
+    }
+
+    private int count(){
+        int cnt=0;
+        Cursor cursor = db.rawQuery("select * from MyReadRecord", null);
+        cnt = cursor.getCount();
+        Log.w("column count",String.valueOf(cursor.getColumnCount()));
+        Log.w("record count",String.valueOf(cnt));
+        return cnt;
+    }
+    private int Rcount(){
+        int cnt=0;
+        Cursor cursor = db.rawQuery("select * from MyReadRecord", null);
+        cnt = cursor.getColumnCount();
+        Log.w("column count",String.valueOf(cursor.getColumnCount()));
+        Log.w("record count",String.valueOf(cursor.getCount()));
+        return cnt;
     }
 
 }

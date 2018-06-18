@@ -39,6 +39,7 @@ public class createPlan extends AppCompatActivity {
         Date date = new Date(now);
         SimpleDateFormat D = new SimpleDateFormat("MM-dd");
         final String curDay = D.format(date);
+        Toast.makeText(this,curDay,Toast.LENGTH_SHORT).show();
 
         Button btn = (Button)findViewById(R.id.createBtn);
         final EditText titleText = (EditText)findViewById(R.id.editText);
@@ -93,8 +94,10 @@ public class createPlan extends AppCompatActivity {
                 int Dpage = Integer.parseInt(page)/Integer.parseInt(date);
                 intent.putExtra("Dpage", String.valueOf(Dpage));
                 db = DBHelper.getWritableDatabase();
-                //String sql = "insert into (BookName, Page, ImgID, Date, RDate) VALUES("+Bname+", "+page+", "+imgID+", "+date+", "+curDay+")";
-                //db.execSQL(sql);
+
+                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"');";
+                db.execSQL(sql);
+                Toast.makeText(getApplicationContext(), "디비 업로드",Toast.LENGTH_SHORT).show();
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
