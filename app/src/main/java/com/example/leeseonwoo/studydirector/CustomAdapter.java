@@ -5,6 +5,7 @@ package com.example.leeseonwoo.studydirector;
  */
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -20,13 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class CustomAdapter extends BaseAdapter implements Checkable{
+public class CustomAdapter extends BaseAdapter{
     //Item 데이터를 저장할 리스트
     List<ListViewItem> listViewItemList = new ArrayList<>();
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
+
+
 
     int a=0;
     CheckBox cb;
@@ -54,6 +58,7 @@ public class CustomAdapter extends BaseAdapter implements Checkable{
         item.setTimeStr(time);
         item.setPageStr(page);
         item.setCheckStr(chpage);
+//        item.setChecked(isChecked());
 
         listViewItemList.add(item);
     }
@@ -89,9 +94,16 @@ public class CustomAdapter extends BaseAdapter implements Checkable{
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(context, "flag: "+b, Toast.LENGTH_SHORT).show();
-
-                db.execSQL("update MyReadRecord set checked = "+String.valueOf(b)+"where id = "+String.valueOf(i)+";", null);
+                Toast.makeText(context, "flag: "+b+", position : "+i, Toast.LENGTH_SHORT).show();
+                int a = i+1;
+                Cursor cursor = db.rawQuery("select * from MyReadRecord where _id = "+a, null);
+                cursor.moveToNext();
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                Toast.makeText(context, "id : "+id, Toast.LENGTH_SHORT).show();
+                String s = "update MyReadRecord set checked = '"+String.valueOf(b)+"' where _id = '"+String.valueOf(a)+"';";
+                if(b) {
+                    db.execSQL(s);
+                }
             }
         });
 
@@ -103,26 +115,6 @@ public class CustomAdapter extends BaseAdapter implements Checkable{
         checkBox.setText("오늘 "+item.getCheckStr()+"페이지");
 
         return view;
-    }
-    @Override
-    public boolean isChecked() {
-        return cb.isChecked() ;
-        // return mIsChecked ;
-    }
-
-    @Override
-    public void toggle() {
-        setChecked(cb.isChecked() ? false : true) ;
-        // setChecked(mIsChecked ? false : true) ;
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-        if (cb.isChecked() != checked) {
-            cb.setChecked(checked) ;
-        }
-
-        // CheckBox 가 아닌 View의 상태 변경.
     }
 
 }

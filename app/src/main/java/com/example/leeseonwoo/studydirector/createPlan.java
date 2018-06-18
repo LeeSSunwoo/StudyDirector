@@ -37,7 +37,7 @@ public class createPlan extends AppCompatActivity {
         db = DBHelper.getWritableDatabase();
 
         Date date = new Date(now);
-        SimpleDateFormat D = new SimpleDateFormat("MM-dd");
+        SimpleDateFormat D = new SimpleDateFormat("yyyy-MM-dd");
         final String curDay = D.format(date);
         Toast.makeText(this,curDay,Toast.LENGTH_SHORT).show();
 

@@ -1,5 +1,8 @@
 package com.example.leeseonwoo.studydirector;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,9 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements OnRefreshListener{
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
     int imgID;
@@ -63,19 +67,18 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
 
         ImageButton CreateBtn = (ImageButton)findViewById(R.id.imageButton);
         Button recordBtn = (Button)findViewById(R.id.button2);
-        final ListView listView = (ListView)findViewById(R.id.listView);
-        swipe = (SwipeRefreshLayout)findViewById(R.id.swipe);
+        ListView listView = (ListView)findViewById(R.id.listview);
 
-        swipe.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) getApplicationContext());
+        swipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        swipe.setOnRefreshListener(this);
 
         DBHelper = new DatabaseOpenHelper(getApplicationContext());
         db = DBHelper.getWritableDatabase();
-        /*
-        if(Rcount()==8) {
-            db.execSQL("drop table MyReadRecord");
-            db.execSQL("create table MyReadRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, Dpage text, Imgid integer, Date text, Rdate text, Record text, checked boolean);");
-            db.execSQL("delete from MyReadRecord");
-        }*/
+/*
+        db.execSQL("drop table MyReadRecord");
+        db.execSQL("create table MyReadRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, Dpage text, Imgid integer, Date text, Rdate text, Record text, checked boolean);");
+        db.execSQL("delete from MyReadRecord");
+*/
         String subject, date, page, dpage, ss;
 
         int img_id;
@@ -116,21 +119,6 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
             public void onClick(View v) {
                 Intent intent3 = new Intent(getApplicationContext(),Main2Activity.class);
                 startActivity(intent3);
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                return false;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                boolean checked = isChecked();
-                Toast.makeText(getApplicationContext(),"position : "+i+", "+checked,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -200,33 +188,6 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
     }
 
     @Override
-    public boolean isChecked() {
-        CheckBox cb = (CheckBox) findViewById(R.id.checkBox) ;
-
-        return cb.isChecked() ;
-        // return mIsChecked ;
-    }
-
-    @Override
-    public void toggle() {
-        CheckBox cb = (CheckBox) findViewById(R.id.checkBox) ;
-
-        setChecked(cb.isChecked() ? false : true) ;
-        // setChecked(mIsChecked ? false : true) ;
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-        CheckBox cb = (CheckBox) findViewById(R.id.checkBox) ;
-
-        if (cb.isChecked() != checked) {
-            cb.setChecked(checked) ;
-        }
-
-        // CheckBox 가 아닌 View의 상태 변경.
-    }
-
-    @Override
     public void onRefresh() {
         String ss = "select * from MyReadRecord order by _id";
         Cursor cursor = db.rawQuery(ss, null);
@@ -248,4 +209,26 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         customAdapter.notifyDataSetChanged();
     }
 
+    public class AlarmHATT {
+        private Context context;
+        public AlarmHATT(Context context) {
+            this.context=context;
+        }
+        public void Alarm() {
+            AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(MainActivity.this, BroadcastD.class);
+
+            PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+            Calendar calendar = Calendar.getInstance();
+            //알람시간 calendar에 set해주기
+
+            calendar.set(Calendar.HOUR_OF_DAY, 24);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
+            //알람 예약
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        }
+    }
 }
