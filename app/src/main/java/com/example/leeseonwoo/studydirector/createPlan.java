@@ -2,6 +2,7 @@ package com.example.leeseonwoo.studydirector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -93,9 +94,19 @@ public class createPlan extends AppCompatActivity {
                 intent.putExtra("date",date);
                 int Dpage = Integer.parseInt(page)/Integer.parseInt(date);
                 intent.putExtra("Dpage", String.valueOf(Dpage));
+                intent.putExtra("checked", String.valueOf(false));
                 db = DBHelper.getWritableDatabase();
-
-                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate, checked) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"', '"+false+"');";
+                int index = 1;
+                Cursor cursor = db.rawQuery("select * from MyReadRecord order by _id", null);
+                while (cursor.moveToNext()){
+                    int __id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String sql1 = "update MyReadRecord set _id = "+index+" where _id = "+__id;
+                    db.execSQL(sql1);
+                    index++;
+                }
+                Log.w("db","새로운 정렬됨");
+                String a = "false";
+                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate, checked) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"', '"+a+"');";
                 db.execSQL(sql);
                 Toast.makeText(getApplicationContext(), "디비 업로드",Toast.LENGTH_SHORT).show();
                 setResult(Activity.RESULT_OK, intent);

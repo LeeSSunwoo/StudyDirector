@@ -26,7 +26,7 @@ public class BroadcastD extends BroadcastReceiver {
         DBHelper = new DatabaseOpenHelper(context);
         db = DBHelper.getWritableDatabase();
         boolean a = true;
-        Cursor cursor = db.rawQuery("select * from MyReadRecord where checked = "+a, null);
+        Cursor cursor = db.rawQuery("select * from MyReadRecord where checked = "+String.valueOf(a), null);
         while(cursor.moveToNext()) {
             int page = Integer.parseInt(cursor.getString(cursor.getColumnIndex("Page")));
             int dpage = Integer.parseInt(cursor.getString(cursor.getColumnIndex("Dpage")));
@@ -34,7 +34,7 @@ public class BroadcastD extends BroadcastReceiver {
             Toast.makeText(context, "page : " + page + " dpage : " + dpage, Toast.LENGTH_SHORT).show();
             page = page - dpage;
             date--;
-            db.execSQL("update MyReadRecord set Page = '" + String.valueOf(page) + "', Date = '" + date + "' where checked = '" + a + "';");
+            db.execSQL("update MyReadRecord set Page = '" + String.valueOf(page) + "', Date = '" + String.valueOf(date) + "' where checked = '" + String.valueOf(a) + "';");
         }
     }
 }

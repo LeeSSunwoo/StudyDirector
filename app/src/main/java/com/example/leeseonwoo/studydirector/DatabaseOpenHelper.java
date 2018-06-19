@@ -31,7 +31,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        Log.w(TAG, "opened database");
+        Log.w(TAG, "opened database")
+        ;
     }
 
     @Override

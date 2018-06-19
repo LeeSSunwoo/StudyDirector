@@ -8,6 +8,7 @@ public class ListViewItem2 {
     private int imgID2;
     private String title;
     private String desc;
+    private String rdate;
 
     public int getImgID2() {
         return imgID2;
@@ -31,5 +32,13 @@ public class ListViewItem2 {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRdate() {
+        return rdate;
+    }
+
+    public void setRdate(String rdate) {
+        this.rdate = rdate;
     }
 }
