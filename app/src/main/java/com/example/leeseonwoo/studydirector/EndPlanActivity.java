@@ -65,7 +65,7 @@ public class EndPlanActivity extends AppCompatActivity {
                     db.execSQL("delete from MyReadRecord where Bookname = '" + Bname+"'");
                 }
 
-                Toast.makeText(EndPlanActivity.this, "count : "+count(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EndPlanActivity.this, "count : "+count(), Toast.LENGTH_SHORT).show();
                 String sql2 = "insert into MyFinishRecord (Bookname, Imgid, Rdate, Record) VALUES('"+Bname+"', '"+imgID+"', '"+curDay+"', '"+article+"');";
                 db.execSQL(sql2);
                 Intent intent = new Intent(getApplicationContext(), Main2Activity.class);

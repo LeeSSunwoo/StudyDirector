@@ -112,12 +112,12 @@ public class CustomAdapter extends BaseAdapter{
                     index++;
                 }
                 Log.w("db","커스텀 정렬됨1");
-                Toast.makeText(context, "flag: "+b+", position : "+i, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "flag: "+b+", position : "+i, Toast.LENGTH_SHORT).show();
                 int a = i+1;
                 cursor = db.rawQuery("select * from MyReadRecord where _id = "+a, null);
                 cursor.moveToFirst();
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
-                Toast.makeText(context, "id : "+id, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "id : "+id, Toast.LENGTH_SHORT).show();
                 String s = "update MyReadRecord set checked = '"+String.valueOf(b)+"' where _id = "+a+";";
                 db.execSQL(s);
             }
@@ -128,20 +128,8 @@ public class CustomAdapter extends BaseAdapter{
         titleTextView.setText(item.getTitleStr());
         timeTextView.setText(item.getTimeStr()+"일 남았습니다.");
         pageTextView.setText(item.getPageStr()+"페이지 남았습니다.");
+        checkBox.setText("오늘 " + item.getCheckStr() + "페이지");
 
-        Cursor cursor1 = db.rawQuery("select * from MyReadRecord where _id = "+a, null);
-        cursor1.moveToFirst();
-        if(cursor1.getCount()>0) {
-
-            String checked = cursor1.getString(cursor1.getColumnIndex("checked"));
-            if (!Boolean.valueOf(checked)) {
-                checkBox.setText("오늘 " + item.getCheckStr() + "페이지");
-            } else {
-                checkBox.setText("하루 목표 완료");
-            }
-        } else {
-            checkBox.setText("오늘 " + item.getCheckStr() + "페이지");
-        }
 
         return view;
 
