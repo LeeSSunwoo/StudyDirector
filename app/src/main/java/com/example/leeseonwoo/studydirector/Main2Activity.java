@@ -27,38 +27,38 @@ public class Main2Activity extends AppCompatActivity {
         DBHelper = new DatabaseOpenHelper(getApplicationContext());
         db = DBHelper.getWritableDatabase();
 
-        Intent intent = getIntent();
+        if(count()==0){
+            customAdapter2.clear();
+        }
 
         int index = 1;
-        Cursor cursor = db.rawQuery("select * from MyReadRecord where Record is not null order by _id", null);
-        if(count()>0) {
-            while (cursor.moveToNext()) {
-                int __id = cursor.getInt(cursor.getColumnIndex("_id"));
-                String sql1 = "update MyReadRecord set _id = '" + index + "' where _id = '" + __id+"';";
-                db.execSQL(sql1);
-                index++;
-            }
-            Log.w("db", "메인2 정렬됨");
+
+        Cursor cursor1 = db.rawQuery("select * from MyFinishRecord", null);
+        while (cursor1.moveToNext()){
+            int __id = cursor1.getInt(cursor1.getColumnIndex("_id"));
+            String sql1 = "update MyFinishRecord set _id = "+index+" where _id = "+__id;
+            db.execSQL(sql1);
+            index++;
         }
-        cursor.moveToFirst();
-
+        Log.w("db", "메인2 정렬됨");
         String subject, rdate, record;
-        boolean checked, aaa = true;
-
+        boolean aaa = true;
+        cursor1.moveToFirst();
         int img_id;
         if (count() > 0) {
             //ss = "select * from MyReadRecor order by _id";
 
-            while (cursor.moveToNext()) {
+            while (true) {
                 if(aaa){
                     Log.w("aaaaaaaaaaaaaa","true");
-                    cursor.moveToFirst();
+                    cursor1.moveToFirst();
                 }
-                img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
-                subject = cursor.getString(cursor.getColumnIndex("Bookname"));
-                rdate = cursor.getString(cursor.getColumnIndex("Rdate"));
-                record = cursor.getString(cursor.getColumnIndex("Record"));
-                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+
+                img_id = cursor1.getInt(cursor1.getColumnIndex("Imgid"));
+                subject = cursor1.getString(cursor1.getColumnIndex("Bookname"));
+                rdate = cursor1.getString(cursor1.getColumnIndex("Rdate"));
+                record = cursor1.getString(cursor1.getColumnIndex("Record"));
+                int id = cursor1.getInt(cursor1.getColumnIndex("_id"));
                 Log.w("cursor", "img : "+img_id+", sub : "+subject+", rdate : "+rdate+", id : "+id);
                 //Log.w("img",imgID);
                 //Log.w("sub",subject);
@@ -67,6 +67,9 @@ public class Main2Activity extends AppCompatActivity {
                 //Log.w("dpage",dpage);
                 aaa = false;
                 customAdapter2.addItem(img_id, subject, record, rdate);
+                if(!cursor1.moveToNext()){
+                    break;
+                }
             }
             customAdapter2.notifyDataSetChanged();
         }
@@ -83,24 +86,9 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        int _id = data.getExtras().getInt("id");
-        Toast.makeText(this, "id : "+_id, Toast.LENGTH_SHORT).show();
-        Cursor cursor = db.rawQuery("select * from MyReadRecord where _id = "+_id, null);
-        int imgID = cursor.getInt(cursor.getColumnIndex("Imgid"));
-        String subject = cursor.getString(cursor.getColumnIndex("Bookname"));
-        String date = cursor.getString(cursor.getColumnIndex("Rdate"));
-        String record = cursor.getString(cursor.getColumnIndex("Record"));
-        customAdapter2.addItem(imgID, subject, record, date);
-        customAdapter2.notifyDataSetChanged();
-
-    }
     private int count(){
         int cnt=0;
-        Cursor cursor = db.rawQuery("select * from MyReadRecord where Record is not null", null);
+        Cursor cursor = db.rawQuery("select * from MyFinishRecord", null);
         cnt = cursor.getCount();
         Log.w("column count",String.valueOf(cursor.getColumnCount()));
         Log.w("record count",String.valueOf(cnt));

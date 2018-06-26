@@ -84,4 +84,8 @@ public class CustomAdapter2 extends BaseAdapter{
         return view;
 
     }
+
+    public void clear(){
+        listViewItemList2.clear();
+    }
  }

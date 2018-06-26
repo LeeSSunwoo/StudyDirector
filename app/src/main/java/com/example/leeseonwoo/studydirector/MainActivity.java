@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     TextView tv;
     String cur,after;
     SwipeRefreshLayout swipe;
-    boolean first = true;
 
     CustomAdapter customAdapter = new CustomAdapter();
     @Override
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new AlarmHATT(getApplicationContext()).Alarm();
-        first = true;
+
         tv = (TextView)findViewById(R.id.tv);
 
         Thread t = new Thread() {
@@ -96,39 +95,39 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             Log.w("db", "메인 정렬됨");
         }
         cursor.moveToFirst();
-        if(first) {
-            String subject, date, page, dpage, ss;
-            boolean checked, aaa = true;
 
-            int img_id;
-            if (count() > 0) {
-                //ss = "select * from MyReadRecord order by _id";
+        String subject, date, page, dpage;
+        boolean checked, aaa = true;
 
-                while (cursor.moveToNext()) {
-                    if(aaa){
-                        Log.w("aaaaaaaaaaaaaa","true");
-                        cursor.moveToFirst();
-                    }
-                    img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
-                    subject = cursor.getString(cursor.getColumnIndex("Bookname"));
-                    date = cursor.getString(cursor.getColumnIndex("Date"));
-                    page = cursor.getString(cursor.getColumnIndex("Page"));
-                    dpage = cursor.getString(cursor.getColumnIndex("Dpage"));
-                    checked = cursor.getString(cursor.getColumnIndex("checked")).equals("True");
-                    int id = cursor.getInt(cursor.getColumnIndex("_id"));
-                    Log.w("cursor", "img : "+img_id+", sub : "+subject+", date : "+date+", page : "+page+", dpage : "+dpage+", checked : "+checked+", id : "+id);
-                    //Log.w("img",imgID);
-                    //Log.w("sub",subject);
-                    //Log.w("date",date);
-                    //Log.w("page",page);
-                    //Log.w("dpage",dpage);
-                    aaa = false;
-                    customAdapter.addItem(img_id, subject, date, page, dpage, checked);
+        int img_id;
+        if (count() > 0) {
+            //ss = "select * from MyReadRecord order by _id";
+
+            while (cursor.moveToNext()) {
+                if(aaa){
+                    Log.w("aaaaaaaaaaaaaa","true");
+                    cursor.moveToFirst();
                 }
-                customAdapter.notifyDataSetChanged();
+                img_id = cursor.getInt(cursor.getColumnIndex("Imgid"));
+                subject = cursor.getString(cursor.getColumnIndex("Bookname"));
+                date = cursor.getString(cursor.getColumnIndex("Date"));
+                page = cursor.getString(cursor.getColumnIndex("Page"));
+                dpage = cursor.getString(cursor.getColumnIndex("Dpage"));
+                checked = cursor.getString(cursor.getColumnIndex("checked")).equals("True");
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                Log.w("cursor", "img : "+img_id+", sub : "+subject+", date : "+date+", page : "+page+", dpage : "+dpage+", checked : "+checked+", id : "+id);
+                //Log.w("img",imgID);
+                //Log.w("sub",subject);
+                //Log.w("date",date);
+                //Log.w("page",page);
+                //Log.w("dpage",dpage);
+                aaa = false;
+                customAdapter.addItem(img_id, subject, date, page, dpage, checked);
             }
-            first=false;
+            customAdapter.notifyDataSetChanged();
         }
+
+
         //db.execSQL("delete from MyReadRecord");
 
         listView.setAdapter(customAdapter);
@@ -152,14 +151,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Toast.makeText(MainActivity.this, "position : "+i, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), EndPlanActivity.class);
+                int index = 1;
+                Cursor cursor = db.rawQuery("select * from MyReadRecord order by _id", null);
+                if(count()>0) {
+                    while (cursor.moveToNext()) {
+                        int __id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        String sql1 = "update MyReadRecord set _id = '" + index + "' where _id = '" + __id+"';";
+                        db.execSQL(sql1);
+                        index++;
+                    }
+                    Log.w("db", "ㅁㅁㅁㅁ 정렬됨");
+                }
                 int a= i+1;
                 String sql = "select * from MyReadRecord where _id = "+a;
-                Cursor cursor = db.rawQuery(sql,null);
-                cursor.moveToNext();
-                Toast.makeText(MainActivity.this, "id : "+a, Toast.LENGTH_SHORT).show();
-                intent.putExtra("id", a);
-                startActivityForResult(intent, 100);
+                Cursor cursor1 = db.rawQuery(sql,null);
+                cursor1.moveToFirst();
+                intent.putExtra("bname", cursor1.getString(cursor1.getColumnIndex("Bookname")));
+                intent.putExtra("imgid", cursor1.getInt(cursor1.getColumnIndex("Imgid")));
+                startActivity(intent);
 
             }
         });
@@ -169,7 +180,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListViewItem item = (ListViewItem)adapterView.getItemAtPosition(i);
                 int a=i+1;
+                int b = count();
                 db.execSQL("delete from MyReadRecord where _id = "+a);
+                if(b==count()) {
+                    db.execSQL("delete from MyReadRecord where _id = " + a);
+                }
                 Toast.makeText(MainActivity.this, "count : "+count(), Toast.LENGTH_SHORT).show();
                 if(count()>0 && a!=count()-1) {
                     Cursor cursor = db.rawQuery("select * from MyReadRecord where _id > " + a, null);
@@ -180,6 +195,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         db.execSQL("update MyReadRecord set _id = '" + aa + "' where _id = '" + id + "'");
                     }
                 }
+/*
+                int c = Rcount();
+                db.execSQL("delete from MyFinishRecord where _id = "+a);
+                if(c==Rcount()) {
+                    db.execSQL("delete from MyFinishRecord where _id = " + a);
+                }
+                if(Rcount()>0 && a!=Rcount()-1) {
+                    Cursor cursor1 = db.rawQuery("select * from MyFinishRecord where _id > " + a, null);
+
+                    while (cursor1.moveToNext()) {
+                        int id_ = cursor1.getInt(cursor1.getColumnIndex("_id"));
+                        int ab = id_ - 1;
+                        db.execSQL("update MyFinishRecord set _id = '" + ab + "' where _id = '" + id_ + "'");
+                    }
+                }*/
                 customAdapter.removeItem(item);
                 customAdapter.notifyDataSetChanged();
                 return false;
@@ -245,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
     private int Rcount(){
         int cnt=0;
-        Cursor cursor = db.rawQuery("select * from MyReadRecord", null);
-        cnt = cursor.getColumnCount();
+        Cursor cursor = db.rawQuery("select * from MyFinishRecord", null);
+        cnt = cursor.getCount();
         Log.w("column count",String.valueOf(cursor.getColumnCount()));
         Log.w("record count",String.valueOf(cursor.getCount()));
         return cnt;
@@ -255,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         customAdapter.clear();
+        count();
         String ss = "select * from MyReadRecord order by _id";
         Cursor cursor = db.rawQuery(ss, null);
         while (cursor.moveToNext()){
@@ -302,7 +333,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     public void updateDB(){
         db.execSQL("drop table MyReadRecord");
-        db.execSQL("create table MyReadRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, Dpage text, Imgid integer, Date text, Rdate text, Record text, checked text);");
+        db.execSQL("drop table MyFinishRecord");
+        db.execSQL("create table MyReadRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, Dpage text, Imgid integer, Date text, checked text);");
+        db.execSQL("create table MyFinishRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Imgid integer, Rdate text, Record text);");
         db.execSQL("delete from MyReadRecord");
+        db.execSQL("delete from MyFinishRecord");
     }
 }

@@ -26,7 +26,7 @@ public class createPlan extends AppCompatActivity {
     String str;
     DatabaseOpenHelper DBHelper;
     SQLiteDatabase db;
-    long now = System.currentTimeMillis();
+
 
 
     @Override
@@ -36,11 +36,6 @@ public class createPlan extends AppCompatActivity {
 
         DBHelper = new DatabaseOpenHelper(getApplicationContext());
         db = DBHelper.getWritableDatabase();
-
-        Date date = new Date(now);
-        SimpleDateFormat D = new SimpleDateFormat("yyyy-MM-dd");
-        final String curDay = D.format(date);
-        Toast.makeText(this,curDay,Toast.LENGTH_SHORT).show();
 
         Button btn = (Button)findViewById(R.id.createBtn);
         final EditText titleText = (EditText)findViewById(R.id.editText);
@@ -104,9 +99,17 @@ public class createPlan extends AppCompatActivity {
                     db.execSQL(sql1);
                     index++;
                 }
+                Cursor cursor1 = db.rawQuery("select * from MyFinishRecord order by _id", null);
+                while (cursor1.moveToNext()){
+                    int __id = cursor1.getInt(cursor.getColumnIndex("_id"));
+                    String sql1 = "update MyReadRecord set _id = "+index+" where _id = "+__id;
+                    db.execSQL(sql1);
+                    index++;
+                }
                 Log.w("db","새로운 정렬됨");
                 String a = "false";
-                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, Rdate, checked) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+curDay+"', '"+a+"');";
+                String sql = "INSERT INTO MyReadRecord (Bookname, Page, DPage, Imgid, Date, checked) VALUES('"+Bname+"', '"+page+"', '"+String.valueOf(Dpage)+"', '"+imgID+"', '"+date+"', '"+a+"');";
+
                 db.execSQL(sql);
                 Toast.makeText(getApplicationContext(), "디비 업로드",Toast.LENGTH_SHORT).show();
                 setResult(Activity.RESULT_OK, intent);

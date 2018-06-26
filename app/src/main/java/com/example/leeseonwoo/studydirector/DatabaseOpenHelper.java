@@ -18,9 +18,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable1 = "create table "+TABLE_NAME1+" (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, DPage text, Imgid integer, Date text, Rdate text, Record text, checked boolean);";
+        String createTable1 = "create table "+TABLE_NAME1+" (_id integer PRIMARY KEY autoincrement, Bookname text, Page text, DPage text, Imgid integer, Date text, checked boolean);";
+        String createTable2 = "create table MyFinishRecord (_id integer PRIMARY KEY autoincrement, Bookname text, Imgid integer, Rdate text, Record text);";
         try{
             db.execSQL(createTable1);
+            db.execSQL(createTable2);
             Log.d(TAG, "Create Table1 City");
         }catch (Exception ex){
             Log.e(TAG, "Exception in CREATE_SQL", ex);

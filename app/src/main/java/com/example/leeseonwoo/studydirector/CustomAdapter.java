@@ -91,7 +91,7 @@ public class CustomAdapter extends BaseAdapter{
         ListViewItem item = listViewItemList.get(i);
         DBHelper = new DatabaseOpenHelper(context);
         db = DBHelper.getWritableDatabase();
-        int index = 1;
+        /*int index = 1;
         Cursor cursor = db.rawQuery("select * from MyReadRecord order by _id", null);
         while (cursor.moveToNext()){
             int __id = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -99,20 +99,27 @@ public class CustomAdapter extends BaseAdapter{
             db.execSQL(sql1);
             index++;
         }
-        Log.w("db","커스텀 정렬됨");
+        Log.w("db","커스텀 정렬됨");*/
         cb.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                int index = 1;
+                Cursor cursor = db.rawQuery("select * from MyReadRecord order by _id", null);
+                while (cursor.moveToNext()){
+                    int __id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String sql1 = "update MyReadRecord set _id = "+index+" where _id = "+__id;
+                    db.execSQL(sql1);
+                    index++;
+                }
+                Log.w("db","커스텀 정렬됨1");
                 Toast.makeText(context, "flag: "+b+", position : "+i, Toast.LENGTH_SHORT).show();
                 int a = i+1;
-                Cursor cursor = db.rawQuery("select * from MyReadRecord where _id = "+a, null);
+                cursor = db.rawQuery("select * from MyReadRecord where _id = "+a, null);
                 cursor.moveToFirst();
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 Toast.makeText(context, "id : "+id, Toast.LENGTH_SHORT).show();
                 String s = "update MyReadRecord set checked = '"+String.valueOf(b)+"' where _id = "+a+";";
-                if(b) {
-                    db.execSQL(s);
-                }
+                db.execSQL(s);
             }
         });
 
